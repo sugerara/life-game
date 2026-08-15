@@ -1,0 +1,122 @@
+:root {
+  --color-bg: oklch(98% 0.005 260);
+  --color-surface: oklch(100% 0 0);
+  --color-border: oklch(88% 0.01 260);
+  --color-text: oklch(25% 0.02 260);
+  --color-text-muted: oklch(50% 0.01 260);
+  --color-accent: oklch(55% 0.18 260);
+  --color-accent-hover: oklch(48% 0.18 260);
+  --color-cell-alive: oklch(55% 0.18 260);
+  --color-cell-dead: oklch(96% 0.005 260);
+  --color-grid-line: oklch(90% 0.005 260);
+
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: oklch(18% 0.01 260);
+    --color-surface: oklch(22% 0.01 260);
+    --color-border: oklch(32% 0.01 260);
+    --color-text: oklch(92% 0.01 260);
+    --color-text-muted: oklch(68% 0.01 260);
+    --color-accent: oklch(72% 0.16 260);
+    --color-accent-hover: oklch(78% 0.16 260);
+    --color-cell-alive: oklch(72% 0.16 260);
+    --color-cell-dead: oklch(24% 0.01 260);
+    --color-grid-line: oklch(30% 0.01 260);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.app {
+  width: min(90vw, 720px);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+
+  &__header {
+    text-align: center;
+
+    h1 {
+      margin: 0 0 0.25rem;
+      font-size: 1.5rem;
+    }
+  }
+
+  &__hint {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+  }
+}
+
+.board {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: var(--color-cell-dead);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.controls {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn {
+  padding: 0.6rem 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+
+  &:hover {
+    border-color: var(--color-accent);
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  &--primary {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: oklch(100% 0 0);
+
+    &:hover {
+      background: var(--color-accent-hover);
+      border-color: var(--color-accent-hover);
+    }
+  }
+}
+
+.status {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
