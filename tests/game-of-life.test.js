@@ -149,6 +149,38 @@ test("aliveCount reflects the number of live cells", () => {
   assertEqual(game.aliveCount, 2);
 });
 
+test("resize preserves overlapping cells when growing", () => {
+  const game = new GameOfLife(3, 3);
+  game.setAlive(0, 0, true);
+  game.setAlive(2, 2, true);
+  game.resize(5, 4);
+  assertEqual(game.cols, 5);
+  assertEqual(game.rows, 4);
+  assertTrue(game.isAlive(0, 0));
+  assertTrue(game.isAlive(2, 2));
+  assertEqual(game.aliveCount, 2);
+});
+
+test("resize drops cells outside the new bounds when shrinking", () => {
+  const game = new GameOfLife(4, 4);
+  game.setAlive(1, 1, true);
+  game.setAlive(3, 3, true);
+  game.resize(2, 2);
+  assertTrue(game.isAlive(1, 1));
+  assertEqual(game.aliveCount, 1);
+});
+
+test("resize keeps the generation counter", () => {
+  const game = new GameOfLife(4, 4);
+  game.setAlive(1, 0, true);
+  game.setAlive(1, 1, true);
+  game.setAlive(1, 2, true);
+  game.step();
+  const generationBefore = game.generation;
+  game.resize(5, 5);
+  assertEqual(game.generation, generationBefore);
+});
+
 let failures = 0;
 for (const { name, passed, error } of results) {
   console.log(`${passed ? "✓" : "✗"} ${name}`);

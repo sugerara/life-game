@@ -45,6 +45,20 @@ export class GameOfLife {
     this.#cells[this.#index(x, y)] = alive ? 1 : 0;
   }
 
+  resize(cols, rows) {
+    const next = new Uint8Array(cols * rows);
+    const copyCols = Math.min(cols, this.#cols);
+    const copyRows = Math.min(rows, this.#rows);
+    for (let y = 0; y < copyRows; y++) {
+      for (let x = 0; x < copyCols; x++) {
+        next[y * cols + x] = this.#cells[this.#index(x, y)];
+      }
+    }
+    this.#cols = cols;
+    this.#rows = rows;
+    this.#cells = next;
+  }
+
   clear() {
     this.#cells.fill(0);
     this.#generation = 0;
