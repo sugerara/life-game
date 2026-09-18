@@ -56,11 +56,11 @@ export class GameOfLifeApp {
   #handleResize() {
     const { cols, rows } = this.#calculateGrid();
     if (cols !== this.#game.cols || rows !== this.#game.rows) {
-      this.#game = new GameOfLife(cols, rows);
-      this.#renderer = new BoardRenderer(this.#canvas, this.#game);
+      this.#game.resize(cols, rows);
     }
     this.#renderer.resize();
     this.#renderer.draw();
+    this.#updateStatus();
   }
 
   #handlePointerDown(e) {
