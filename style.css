@@ -9,6 +9,8 @@
   --color-cell-alive: oklch(55% 0.18 260);
   --color-cell-dead: oklch(96% 0.005 260);
   --color-grid-line: oklch(90% 0.005 260);
+  --color-age-lightness: 62%;
+  --color-age-chroma: 0.19;
 
   color-scheme: light dark;
 }
@@ -25,6 +27,8 @@
     --color-cell-alive: oklch(72% 0.16 260);
     --color-cell-dead: oklch(24% 0.01 260);
     --color-grid-line: oklch(30% 0.01 260);
+    --color-age-lightness: 74%;
+    --color-age-chroma: 0.17;
   }
 }
 
@@ -112,6 +116,20 @@ body {
       background: var(--color-accent-hover);
       border-color: var(--color-accent-hover);
     }
+  }
+}
+
+.select {
+  padding: 0.6rem 0.75rem;
+  font-size: 0.95rem;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--color-accent);
   }
 }
 

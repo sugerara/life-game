@@ -11,22 +11,26 @@ export class GameOfLifeApp {
   #toggleBtn;
   #randomBtn;
   #clearBtn;
+  #colorModeSelect;
   #statusEl;
   #running = false;
   #lastStepTime = 0;
   #isPointerDown = false;
   #paintValue = true;
 
-  constructor({ canvas, toggleBtn, randomBtn, clearBtn, statusEl }) {
+  constructor({ canvas, toggleBtn, randomBtn, clearBtn, colorModeSelect, statusEl }) {
     this.#canvas = canvas;
     this.#toggleBtn = toggleBtn;
     this.#randomBtn = randomBtn;
     this.#clearBtn = clearBtn;
+    this.#colorModeSelect = colorModeSelect;
     this.#statusEl = statusEl;
 
     const { cols, rows } = this.#calculateGrid();
     this.#game = new GameOfLife(cols, rows);
     this.#renderer = new BoardRenderer(canvas, this.#game);
+
+    this.#renderer.colorMode = this.#colorModeSelect.value;
 
     this.#bindEvents();
     this.#handleResize();
@@ -43,6 +47,7 @@ export class GameOfLifeApp {
     this.#toggleBtn.addEventListener("click", () => this.#toggleRunning());
     this.#randomBtn.addEventListener("click", () => this.#handleRandom());
     this.#clearBtn.addEventListener("click", () => this.#handleClear());
+    this.#colorModeSelect.addEventListener("change", () => this.#handleColorModeChange());
 
     this.#canvas.addEventListener("pointerdown", (e) => this.#handlePointerDown(e));
     this.#canvas.addEventListener("pointermove", (e) => this.#handlePointerMove(e));
@@ -94,6 +99,11 @@ export class GameOfLifeApp {
     this.#game.randomize();
     this.#renderer.draw();
     this.#updateStatus();
+  }
+
+  #handleColorModeChange() {
+    this.#renderer.colorMode = this.#colorModeSelect.value;
+    this.#renderer.draw();
   }
 
   #handleClear() {
