@@ -1,12 +1,41 @@
+export const COLOR_MODES = Object.freeze({ MONO: "mono", AGE: "age" });
+
+const PALETTE_STEPS = 16;
+const HUE_YOUNG = 250;
+const HUE_OLD = 25;
+
 export class BoardRenderer {
   #canvas;
   #ctx;
   #game;
+  #colorMode = COLOR_MODES.MONO;
+  #palette = [];
+  #paletteKey = "";
 
   constructor(canvas, game) {
     this.#canvas = canvas;
     this.#ctx = canvas.getContext("2d");
     this.#game = game;
+  }
+
+  set colorMode(mode) {
+    this.#colorMode = mode;
+  }
+
+  #ageColor(age) {
+    return this.#palette[Math.min(PALETTE_STEPS - 1, Math.round(Math.log2(age) * 3))];
+  }
+
+  #updatePalette(styles) {
+    const lightness = styles.getPropertyValue("--color-age-lightness").trim();
+    const chroma = styles.getPropertyValue("--color-age-chroma").trim();
+    const key = `${lightness}/${chroma}`;
+    if (key === this.#paletteKey) return;
+    this.#paletteKey = key;
+    this.#palette = Array.from({ length: PALETTE_STEPS }, (_, i) => {
+      const hue = HUE_YOUNG + ((HUE_OLD - HUE_YOUNG) * i) / (PALETTE_STEPS - 1);
+      return `oklch(${lightness} ${chroma} ${hue.toFixed(1)})`;
+    });
   }
 
   resize() {
@@ -36,10 +65,21 @@ export class BoardRenderer {
 
     ctx.clearRect(0, 0, width, height);
 
+    const byAge = this.#colorMode === COLOR_MODES.AGE;
+    if (byAge) this.#updatePalette(styles);
+
     ctx.fillStyle = aliveColor;
+    let currentColor = aliveColor;
     for (let y = 0; y < this.#game.rows; y++) {
       for (let x = 0; x < this.#game.cols; x++) {
         if (this.#game.isAlive(x, y)) {
+          if (byAge) {
+            const color = this.#ageColor(this.#game.ageAt(x, y));
+            if (color !== currentColor) {
+              ctx.fillStyle = color;
+              currentColor = color;
+            }
+          }
           ctx.fillRect(x * cellWidth, y * cellHeight, cellWidth, cellHeight);
         }
       }
